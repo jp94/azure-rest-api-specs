@@ -53,6 +53,7 @@ swagger-to-sdk:
   - repo: azure-sdk-for-python
   - repo: azure-sdk-for-java
   - repo: azure-sdk-for-go
+  - repo: azure-sdk-for-js
   - repo: azure-sdk-for-node
   - repo: azure-sdk-for-ruby
     after_scripts:
@@ -89,6 +90,7 @@ python:
   payload-flattening-threshold: 2
   namespace: azure.graphrbac
   package-name: azure-graphrbac
+  package-version: 0.50.0
   clear-output-folder: true
 ```
 ``` yaml $(python) && $(python-mode) == 'update'
