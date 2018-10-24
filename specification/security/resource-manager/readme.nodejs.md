@@ -6,8 +6,8 @@ Please also specify `--node-sdks-folder=<path to root folder of your azure-sdk-f
 ``` yaml $(nodejs)
 nodejs:
   azure-arm: true
-  package-name: azure-arm-scheduler
-  output-folder: $(node-sdks-folder)/lib/services/schedulerManagement2
+  package-name: azure-arm-security
+  output-folder: $(node-sdks-folder)/lib/services/securityManagement
   generate-license-txt: true
   generate-package-json: true
   generate-readme-md: true
