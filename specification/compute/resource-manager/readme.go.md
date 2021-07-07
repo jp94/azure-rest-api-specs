@@ -2,20 +2,62 @@
 
 These settings apply only when `--go` is specified on the command line.
 
-```yaml $(go)
+```yaml $(go) && !(track2)
 go:
-  license-header: MICROSOFT_APACHE_NO_VERSION
+  license-header: MICROSOFT_MIT_NO_VERSION
   clear-output-folder: true
+
+directive:
+    # dynamically add a DummyOrchestrationServiceName value to the enum 
+  - from: compute.json
+    where: $..enum
+    transform: >-
+      if( $.length === 1 && $[0] === "AutomaticRepairs") { 
+        $.push('DummyOrchestrationServiceName');
+      }
+      return $;
+
+  - from: source-file-go
+    where: $ 
+    transform: >-
+      return $.
+        replace(/\/\/ DummyOrchestrationServiceName .../g,'').
+        replace(/DummyOrchestrationServiceName OrchestrationServiceNames = "DummyOrchestrationServiceName"\n/g,'').
+        replace(/,DummyOrchestrationServiceName/,'').
+        replace(/, 'DummyOrchestrationServiceName'/,'');
+```
+
+``` yaml $(go) && $(track2)
+license-header: MICROSOFT_MIT_NO_VERSION
+module-name: sdk/compute/armcompute
+module: github.com/Azure/azure-sdk-for-go/$(module-name)
+output-folder: $(go-sdk-folder)/$(module-name)
+azure-arm: true
+
+directive:
+  - from: disk.json
+    where: "$.definitions.PurchasePlan"
+    transform: >
+      $["x-ms-client-name"] = "DiskPurchasePlan";
 ```
 
 ### Go multi-api
 
 ```yaml $(go) && $(multiapi)
 batch:
+  - tag: package-2021-03-01
+  - tag: package-2020-12-01
+  - tag: package-2020-10-01-preview
+  - tag: profile-hybrid-2020-09-01
+  - tag: package-2020-06-30
+  - tag: package-2020-06-01
+  - tag: package-2019-12-01
+  - tag: package-2019-07
+  - tag: package-2019-03-01
   - tag: package-2018-10-01
   - tag: package-2018-06
   - tag: package-compute-2018-04
-  - tag: package-compute-only-2017-12
+  - tag: package-compute-2017-12
   - tag: package-compute-2017-03
   - tag: package-compute-2016-04-preview
   - tag: package-compute-2016-03
@@ -25,6 +67,96 @@ batch:
   - tag: package-container-service-2016-09
   - tag: package-container-service-2016-03
   - tag: package-container-service-2015-11-preview
+```
+
+### Tag: package-2021-03-01 and go
+
+These settings apply only when `--tag=package-2021-03-01 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2021-03-01' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2021-03-01/$(namespace)
+```
+
+### Tag: package-2020-12-01 and go
+
+These settings apply only when `--tag=package-2020-12-01 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2020-12-01' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2020-12-01/$(namespace)
+```
+
+### Tag: package-2020-10-01-preview and go
+
+These settings apply only when `--tag=package-2020-10-01-preview --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2020-10-01-preview' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/preview/$(namespace)/mgmt/2020-10-01-preview/$(namespace)
+```
+
+### Tag: profile-hybrid-2020-09-01 and go
+
+These settings apply only when `--tag=profile-hybrid-2020-09-01 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='profile-hybrid-2020-09-01' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/profiles/2020-09-01/compute/mgmt/compute
+```
+
+### Tag: package-2020-06-30 and go
+
+These settings apply only when `--tag=package-2020-06-30 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2020-06-30' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2020-06-30/$(namespace)
+```
+
+### Tag: package-2020-06-01 and go
+
+These settings apply only when `--tag=package-2020-06-01 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2020-06-01' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2020-06-01/$(namespace)
+```
+
+### Tag: package-2019-12-01 and go
+
+These settings apply only when `--tag=package-2019-12-01 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2019-12-01' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2019-12-01/$(namespace)
+```
+
+### Tag: package-2019-07 and go
+
+These settings apply only when `--tag=package-2019-07 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2019-07' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2019-07-01/$(namespace)
+```
+
+### Tag: package-2019-03-01 and go
+
+These settings apply only when `--tag=package-2019-03-01 --go` is specified on the command line.
+Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
+
+```yaml $(tag)=='package-2019-03-01' && $(go)
+namespace: compute
+output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2019-03-01/$(namespace)
 ```
 
 ### Tag: package-2018-10-01 and go
@@ -57,12 +189,12 @@ namespace: compute
 output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2018-04-01/$(namespace)
 ```
 
-### Tag: package-compute-only-2017-12 and go
+### Tag: package-compute-2017-12 and go
 
-These settings apply only when `--tag=package-compute-only-2017-12 --go` is specified on the command line.
+These settings apply only when `--tag=package-compute-2017-12 --go` is specified on the command line.
 Please also specify `--go-sdk-folder=<path to the root directory of your azure-sdk-for-go clone>`.
 
-```yaml $(tag)=='package-compute-only-2017-12' && $(go)
+```yaml $(tag)=='package-compute-2017-12' && $(go)
 namespace: compute
 output-folder: $(go-sdk-folder)/services/$(namespace)/mgmt/2017-12-01/$(namespace)
 ```
